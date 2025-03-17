@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/17 19:02:27 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/17 19:09:14 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,19 @@ main(int argc, char* argv[])
 {
 	int i;
 	int y;
-	int k;
-	char temp;
-	char buffer[9];
+	pid_t server_pid;
+	
+	server_pid = ft_atoi(argv[1]);
 
 	while(argv[y][i] != '\0')
 	{
-
+		while(argv[y][i] != '\0')
+		{
+			character_to_binary(argv[y][i], server_pid);
+			i++;
+		}
+		if(y < argc - 1)
+			character_to_binary(' ', server_pid);
 	}
+	return(character_to_binary('\0', server_pid), 0);
 }
