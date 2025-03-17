@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/17 19:09:14 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/17 19:13:22 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void character_to_binary(char t, pid_t server_pid)
 	} 
 }
 
-main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
 	int i;
 	int y;
