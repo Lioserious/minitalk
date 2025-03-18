@@ -6,63 +6,142 @@
 #    By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/17 16:11:38 by lihrig            #+#    #+#              #
-#    Updated: 2025/03/18 16:27:35 by lihrig           ###   ########.fr        #
+#    Updated: 2025/03/18 17:17:10 by lihrig           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/03/18                              #+#    #+#              #
+#    Updated: 2025/03/18                              ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+################################################################################
+#################### PROJECT CONFIGURATION #####################################
+################################################################################
+# Compilers and flags
 CC = cc
 CC_FLAGS = -Wall -Werror -Wextra
+RM = rm -rf
 
 # Targets
 SERVER = server
 CLIENT = client
 SERVER_BONUS = server_bonus
-CLIENT_BONUS =  client_bonus
+CLIENT_BONUS = client_bonus
+
+################################################################################
+#################### DIRECTORIES ##############################################
+################################################################################
+OBJ_DIR = _obj
+LIBFT_DIR = lib/Libft
+LIBFT = $(LIBFT_DIR)/libft.a
+INC_DIRS := $(LIBFT_DIR)
+
+vpath %.h $(INC_DIRS)
+
+################################################################################
+#################### SOURCE FILES #############################################
+################################################################################
 # Source and Object Files
 SRC_FILES = server.c client.c
 SRC_FILES_BONUS = server_bonus.c client_bonus.c
-OBJ_FILES = $(SRC_FILES:%.c=%.o)
-OBJ_FILES_BONUS = $(SRC_FILES_BONUS:%.c=%.o)
 
-# Libft Paths
-LIBFT_DIR = lib/Libft
-LIBFT = $(LIBFT_DIR)/libft.a
+################################################################################
+#################### OBJECT FILES ############################################
+################################################################################
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:%.c=%.o))
+OBJS_BONUS = $(addprefix $(OBJ_DIR)/, $(SRC_FILES_BONUS:%.c=%.o))
+
+################################################################################
+#################### COMPILATION FLAGS ######################################
+################################################################################
+CFLAGS := $(CC_FLAGS) -g -MMD -MP $(addprefix -I, $(INC_DIRS))
+
+# OS-specific configuration
+UNAME := $(shell uname)
+ifeq ($(UNAME), Darwin) # macOS
+	LDFLAGS := -L$(LIBFT_DIR) -lft
+else ifeq ($(UNAME), Linux) # Linux
+	LDFLAGS := -L$(LIBFT_DIR) -lft
+else # Windows/Default
+	LDFLAGS := -L$(LIBFT_DIR) -lft
+endif
+
+################################################################################
+#################### RULES ###################################################
+################################################################################
+# Default target
+all: $(OBJ_DIR) libft $(SERVER) $(CLIENT)
+
+# Create object directory
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 # Rule to compile .c files into .o files
-%.o: %.c
-	$(CC) $(CC_FLAGS) -I$(LIBFT_DIR) -c $< -o $@
-
-# Default target
-all: $(LIBFT) $(SERVER) $(CLIENT)
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	@mkdir -p $(@D)
+	@echo "\033[0;32mCompiling $<...\033[0m"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Rule to create the executables
-$(SERVER): server.o $(LIBFT)
-	$(CC) $(CC_FLAGS) server.o -L$(LIBFT_DIR) -lft -o $(SERVER)
+$(SERVER): $(OBJ_DIR)/server.o $(LIBFT)
+	@echo "\033[0;32mCompiling $(SERVER)...\033[0m"
+	$(CC) $(CFLAGS) $(OBJ_DIR)/server.o -o $(SERVER) $(LDFLAGS)
+	@echo "\033[0;32mSuccessful Compilation of $(SERVER)\033[0m"
 
-$(CLIENT): client.o $(LIBFT)
-	$(CC) $(CC_FLAGS) client.o -L$(LIBFT_DIR) -lft -o $(CLIENT)
+$(CLIENT): $(OBJ_DIR)/client.o $(LIBFT)
+	@echo "\033[0;32mCompiling $(CLIENT)...\033[0m"
+	$(CC) $(CFLAGS) $(OBJ_DIR)/client.o -o $(CLIENT) $(LDFLAGS)
+	@echo "\033[0;32mSuccessful Compilation of $(CLIENT)\033[0m"
 
-$(SERVER_BONUS): server_bonus.o $(LIBFT)
-	$(CC) $(CC_FLAGS) server_bonus.o -L$(LIBFT_DIR) -lft -o $(SERVER_BONUS)
+$(SERVER_BONUS): $(OBJ_DIR)/server_bonus.o $(LIBFT)
+	@echo "\033[0;32mCompiling $(SERVER_BONUS)...\033[0m"
+	$(CC) $(CFLAGS) $(OBJ_DIR)/server_bonus.o -o $(SERVER_BONUS) $(LDFLAGS)
+	@echo "\033[0;32mSuccessful Compilation of $(SERVER_BONUS)\033[0m"
 
-$(CLIENT_BONUS): client_bonus.o $(LIBFT)
-	$(CC) $(CC_FLAGS) client_bonus.o -L$(LIBFT_DIR) -lft -o $(CLIENT_BONUS)
+$(CLIENT_BONUS): $(OBJ_DIR)/client_bonus.o $(LIBFT)
+	@echo "\033[0;32mCompiling $(CLIENT_BONUS)...\033[0m"
+	$(CC) $(CFLAGS) $(OBJ_DIR)/client_bonus.o -o $(CLIENT_BONUS) $(LDFLAGS)
+	@echo "\033[0;32mSuccessful Compilation of $(CLIENT_BONUS)\033[0m"
 
 # Build Libft (if not already built)
+libft: $(LIBFT)
 $(LIBFT):
-	make -C $(LIBFT_DIR)
+	@echo "\033[0;32mCompiling libft..\033[0m"
+	@$(MAKE) -C $(LIBFT_DIR)
 
 # Bonus Instructions
-bonus: $(SERVER_BONUS) $(CLIENT_BONUS)
+bonus: $(OBJ_DIR) libft $(SERVER_BONUS) $(CLIENT_BONUS)
+
 # Clean up object files and executables
 clean:
-	rm -f $(OBJ_FILES) $(OBJ_FILES_BONUS)
-	make -C $(LIBFT_DIR) clean
+	@echo "\033[0;32mCleaning object files...\033[0m"
+	@$(RM) $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -f $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
-	make -C $(LIBFT_DIR) fclean
+	@echo "\033[0;32mRemoving executables...\033[0m"
+	@$(RM) $(SERVER) $(CLIENT) $(SERVER_BONUS) $(CLIENT_BONUS)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "\033[0;32mRemoved files successfully\033[0m"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+# Debug test with Valgrind
+debug: CFLAGS += -g
+debug: re
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(SERVER)
+
+# Compile with Address Sanitizer
+san: CFLAGS += -fsanitize=address -g
+san: LDFLAGS += -fsanitize=address
+san: re
+
+.PHONY: all clean fclean re libft bonus debug san
