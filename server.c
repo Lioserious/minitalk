@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:16 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 17:10:44 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 17:20:21 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ void	print_message(char message[262144], int *index)
 	}
 	write(1, "\n", 1);
 	i = 0;
-	while(i < 262144)
+	while (i < 262144)
 		message[i++] = '\0';
 	*index = 0;
 }
+
 void	signal_to_output(int sig, siginfo_t *info, void *context)
 {
 	static char	bit = 0;
@@ -60,6 +61,7 @@ void	signal_to_output(int sig, siginfo_t *info, void *context)
 		bit = 0;
 	}
 }
+
 int	main(void)
 {
 	struct sigaction	sigact;

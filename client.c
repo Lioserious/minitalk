@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 17:00:24 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 17:19:49 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char *argv[])
 	int		i;
 	int		y;
 	pid_t	server_pid;
-	
+
 	i = 0;
 	y = 2;
 	if (argc != 3)
