@@ -6,11 +6,17 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:16 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 16:34:12 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 17:10:44 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+void	sig_error(void)
+{
+	ft_printf("ERROR with Signal");
+	exit(EXIT_FAILURE);
+}
 
 void	print_message(char message[262144], int *index)
 {
@@ -23,6 +29,9 @@ void	print_message(char message[262144], int *index)
 		i++;
 	}
 	write(1, "\n", 1);
+	i = 0;
+	while(i < 262144)
+		message[i++] = '\0';
 	*index = 0;
 }
 void	signal_to_output(int sig, siginfo_t *info, void *context)
@@ -43,17 +52,13 @@ void	signal_to_output(int sig, siginfo_t *info, void *context)
 	if (count == 8)
 	{
 		message[index] = bit;
-		index++;
 		if (message[index] == '\0')
 			print_message(message, &index);
+		else
+			index++;
 		count = 0;
 		bit = 0;
 	}
-}
-void	sig_error(void)
-{
-	ft_printf("ERROR with Signal");
-	exit(EXIT_FAILURE);
 }
 int	main(void)
 {

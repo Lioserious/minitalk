@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 16:32:32 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 17:00:24 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,10 @@ int	main(int argc, char *argv[])
 		ft_printf("Invalid PID\n");
 		exit(EXIT_FAILURE);
 	}
-	while (argv[y][i] != '\0')
+	while (argv[2][i] != '\0')
 	{
-		i = 0;
-		while (argv[y][i] != '\0')
-		{
-			character_to_binary(argv[y][i], server_pid);
-			i++;
-		}
-		if (y < argc - 1)
-			character_to_binary(' ', server_pid);
-		y++;
+		character_to_binary(argv[2][i], server_pid);
+		i++;
 	}
 	return (character_to_binary('\0', server_pid), 0);
 }
