@@ -6,13 +6,19 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:16 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 17:30:04 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 18:20:11 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	print_message(char message[262144], int *index)
+void	sig_error(void)
+{
+	ft_printf("ERROR with Signal");
+	exit(EXIT_FAILURE);
+}
+
+void	print_message(char message[262144], int *index, pid_t client_pid)
 {
 	int	i;
 
@@ -23,6 +29,7 @@ void	print_message(char message[262144], int *index)
 		i++;
 	}
 	write(1, "\n", 1);
+	kill(client_pid, SIGUSR1);
 	i = 0;
 	while (i < 262144)
 		message[i++] = '\0';
@@ -48,7 +55,7 @@ void	signal_to_output(int sig, siginfo_t *info, void *context)
 	{
 		message[index] = bit;
 		if (message[index] == '\0')
-			print_message(message, &index);
+			print_message(message, &index, client_pid);
 		else
 			index++;
 		count = 0;

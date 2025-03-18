@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 17:19:49 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 18:20:28 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,19 @@
 
 // SIGUSR 2 = 1
 // SIGUSR 1 = 0
+
+void	argc_error(void)
+{
+	ft_printf("Usage: %s [server_pid] [message]\n");
+	exit(EXIT_FAILURE);
+}
+
+void	server_response(int sig)
+{
+	if (sig == SIGUSR1)
+		ft_printf("Server received message\n");
+	exit(EXIT_SUCCESS);
+}
 
 void	character_to_binary(char t, pid_t server_pid)
 {
@@ -35,27 +48,28 @@ void	character_to_binary(char t, pid_t server_pid)
 
 int	main(int argc, char *argv[])
 {
-	int		i;
-	int		y;
-	pid_t	server_pid;
+	struct sigaction	sigact;
+	int					i;
+	pid_t				server_pid;
 
+	sigact.sa_handler = server_response;
+	sigemptyset(&sigact.sa_mask);
+	sigact.sa_flags = 0;
 	i = 0;
-	y = 2;
 	if (argc != 3)
+		argc_error();
+	if (sigaction(SIGUSR1, &sigact, NULL) == -1)
 	{
-		ft_printf("Usage: %s [server_pid] [message]\n");
+		ft_printf("Failed to set up SIGUSR1 handler.\n");
 		exit(EXIT_FAILURE);
 	}
 	server_pid = ft_atoi(argv[1]);
-	if (server_pid <= 0)
-	{
-		ft_printf("Invalid PID\n");
-		exit(EXIT_FAILURE);
-	}
 	while (argv[2][i] != '\0')
 	{
 		character_to_binary(argv[2][i], server_pid);
 		i++;
 	}
-	return (character_to_binary('\0', server_pid), 0);
+	character_to_binary('\0', server_pid);
+	pause();
+	return (0);
 }

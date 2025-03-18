@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/18 17:19:49 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 18:20:01 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,9 @@ void	character_to_binary(char t, pid_t server_pid)
 int	main(int argc, char *argv[])
 {
 	int		i;
-	int		y;
 	pid_t	server_pid;
 
 	i = 0;
-	y = 2;
 	if (argc != 3)
 	{
 		ft_printf("Usage: %s [server_pid] [message]\n");
