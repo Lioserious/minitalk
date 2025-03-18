@@ -6,7 +6,7 @@
 /*   By: lihrig <lihrig@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 16:10:24 by lihrig            #+#    #+#             */
-/*   Updated: 2025/03/17 19:13:22 by lihrig           ###   ########.fr       */
+/*   Updated: 2025/03/18 14:45:19 by lihrig           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void character_to_binary(char t, pid_t server_pid)
 			kill(server_pid, SIGUSR2);
 		else
 			kill(server_pid, SIGUSR1);
-		usleep(100);
+		usleep(200);
 		i--;
 	} 
 }
@@ -39,10 +39,22 @@ int main(int argc, char* argv[])
 	int y;
 	pid_t server_pid;
 	
+	y = 2;
+	if (argc < 2 && argc < 3)
+	{
+		ft_printf("Usage: %s [server_pid] [message]\n");
+		exit(EXIT_FAILURE);
+	}
 	server_pid = ft_atoi(argv[1]);
+	if (server_pid <= 0)
+	{
+		ft_printf("Invalid PID\n");
+		exit(EXIT_FAILURE);
+	}
 
 	while(argv[y][i] != '\0')
 	{
+		i = 0;
 		while(argv[y][i] != '\0')
 		{
 			character_to_binary(argv[y][i], server_pid);
@@ -50,6 +62,7 @@ int main(int argc, char* argv[])
 		}
 		if(y < argc - 1)
 			character_to_binary(' ', server_pid);
+		y++;
 	}
 	return(character_to_binary('\0', server_pid), 0);
 }
